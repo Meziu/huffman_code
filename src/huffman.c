@@ -6,73 +6,46 @@
 #include "alphabet.h"
 
 void huffman_recursive(Symbol** symbols, unsigned int length);
-void huffman_tree_encode(Symbol* root);
 
 void huffman_code(Alphabet* ab) {
 	// Alfabeto ordinato, alfabeto fortunato
 	quicksort_alphabet(ab);
 
-	Symbol** array_copy = malloc(ab->length * sizeof(Symbol*));
-	memcpy(array_copy, ab->symbols, ab->length*sizeof(Symbol*));
-
-	array_copy[ab->length - 1];
-
-	huffman_recursive(array_copy, ab->length);
-
-	free(array_copy);
+	huffman_recursive(ab->symbols, ab->length);
 }
 
 // Richiede che l'array symbols sia già ordinato (per la probabilità)
 void huffman_recursive(Symbol** symbols, unsigned int length) {
-	if (symbols == NULL) {
+	if (symbols == NULL || length <= 1) {
 		return;
 	}
 
-	if (length > 1) {
+	if (length > 2) {
 		Symbol* second_to_last = symbols[length-2];
 		Symbol* last = symbols[length-1];
 
-		// Nodo padre dei due dati (TODO; usa tipi diversi per i simboli e per i nodi di simboli, fr);
-		Symbol fusion = (Symbol){
-			'\0', // non-valore
-			second_to_last->prob + last->prob, // Somma delle probabilità dei figli
-			new_code(), // codice vuoto
-			last, // A sinistra va il più piccolo
-			second_to_last,
-		};
+		// L'elemento second_to_last si presta come fusione di se stesso e dell' "ultimo"
+		second_to_last->prob += last->prob;
 
-		// Taglio dell'alfabeto (è una copia, non ci interessa sistemarlo alla fine)
-		symbols[length-2] = &fusion; // Sostituiamo fusion al posto dei due nodi figli
-
-		// Inserisci l'elemento fusion al punto giusto dell'array
 		unsigned int spot = sort_last_symbol(symbols, length-1);
-		assert(second_to_last == symbols[spot]->right);
+		second_to_last = symbols[spot];
 
 		// Il risultato del codice dato da questa chiamata è restituito.
 		huffman_recursive(symbols, length-1);
-	} else {
-		// Non ci sono altri nodi da accorpare, è ora di fare l'encoding.
-		huffman_tree_encode(symbols[0]);
-	}
-}
 
-// Riempi un'albero di Huffman con i codici associati
-void huffman_tree_encode(Symbol* root) {
-	if (root == NULL)
-		return;
+		second_to_last->prob -= last->prob;
 
-	if (root->left != NULL) {
-		// I codici left and right sono quello del root più una cifra data in base alla loro posizione
-		root->left->code = root->code;
-		push_code_digit(&root->left->code, 0); // 0 a sinistra
+		// Propagazione del codice associato
+		last->code = second_to_last->code;
 
-		huffman_tree_encode(root->left);
-	}
+		push_code_digit(&second_to_last->code, 1);
+		push_code_digit(&last->code, 0);
+	} else { // Caso in cui ci siano esattamente due elementi nella lista.
+		// È sempre valido il presupposto che la lista sia ordinata, quindi il primo avrà probabilità maggiore.
+		symbols[0]->code = new_code();
+		push_code_digit(&symbols[0]->code, 1);
 
-	if (root->right != NULL) {
-		root->right->code = root->code;
-		push_code_digit(&root->right->code, 1); // 1 a destra
-
-		huffman_tree_encode(root->right);
+		symbols[1]->code = new_code();
+		push_code_digit(&symbols[1]->code, 0);
 	}
 }

@@ -33,8 +33,6 @@ Alphabet create_alphabet(char *sample_message) {
 				1.0, // Non mi piace l'utilizzo di float per numeri interi,
 					 // considera il type casting/union
 				new_code(),	 // Default, viene modificato in seguito con altre funzioni.
-				NULL,
-				NULL,
 			};
 
 			ab.symbols[ab.length++] = new_sym;
@@ -143,16 +141,11 @@ float sum_of_probabilities(Alphabet *ab) {
 }
 
 float node_probability(Symbol* sym) {
-	if (sym == NULL) {
+	if (sym == NULL && sym->s != '\0') { // Il NUL character è ufficialmente il simbolo di un nodo "fittizio"
 		return 0.0;
 	}
 
-	// Il NUL character è ufficialmente il simbolo di un nodo "fittizio"
-	if (sym->s != '\0') {
-		return sym->prob;
-	}
-
-	return node_probability(sym->left) + node_probability(sym->right);
+	return sym->prob;
 }
 
 /* LOGICA DEL QUICKSORT, IT JUST WORKS TM */

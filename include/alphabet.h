@@ -18,9 +18,6 @@ typedef struct SSymbol {
 	char s;
 	float prob;
 	Code code;
-	// Array e BinaryTree tutto in uno??? Count me in!
-	struct SSymbol* left;
-	struct SSymbol* right;
 } Symbol;
 
 typedef struct {
