@@ -29,12 +29,13 @@ void huffman_recursive(Symbol** symbols, unsigned int length) {
 	}
 
 	if (length > 1) {
+		//quicksort_symbols_prob(symbols, 0, length-1);
+
 		Symbol* second_to_last = symbols[length-2];
 		Symbol* last = symbols[length-1];
 
 		// Nodo padre dei due dati (TODO; usa tipi diversi per i simboli e per i nodi di simboli, fr);
-		Symbol* fusion = malloc(sizeof(Symbol));
-		*fusion = (Symbol){
+		Symbol fusion = (Symbol){
 			'\0', // non-valore
 			second_to_last->prob + last->prob, // Somma delle probabilità dei figli
 			new_code(), // codice vuoto
@@ -43,15 +44,13 @@ void huffman_recursive(Symbol** symbols, unsigned int length) {
 		};
 
 		// Taglio dell'alfabeto (è una copia, non ci interessa sistemarlo alla fine)
-		symbols[length-2] = fusion; // Sostituisci fusion al posto dei due nodi figli
+		symbols[length-2] = &fusion; // Sostituiamo fusion al posto dei due nodi figli
 
 		// Inserisci l'elemento fusion al punto giusto dell'array
 		sort_last_symbol(symbols, length-1);
 
 		// Il risultato del codice dato da questa chiamata è restituito.
 		huffman_recursive(symbols, length-1);
-
-		free(fusion);
 	} else {
 		// Non ci sono altri nodi da accorpare, è ora di fare l'encoding.
 		huffman_tree_encode(symbols[0]);

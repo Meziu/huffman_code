@@ -79,13 +79,9 @@ Symbol *find_symbol(Alphabet *ab, char c) {
 void sort_last_symbol(Symbol** symbols, unsigned int length) {
 	assert(symbols != NULL);
 
-	Symbol** s = &symbols[length-1];
-
-	unsigned int spot = length-1;
-
 	for (int i = length-2; i >= 0; i--) {
-		if (symbols[i]->prob < (*s)->prob) {
-			swap_symbol_references(&symbols[i], s);
+		if (symbols[i]->prob < symbols[i+1]->prob) {
+			swap_symbol_references(&symbols[i], &symbols[i+1]);
 		} else {
 			break;
 		}
@@ -99,7 +95,7 @@ Code new_code() {
 void push_code_digit(Code* code, bool d) {
 	assert(code != NULL);
 
-	assert(code->length < sizeof(code->bitfield)*8 - 1); // Se è già al massimo abbiamo bisogno di più spazio
+	assert(code->length <= sizeof(code->bitfield) * 8 - 1); // Se è già al massimo abbiamo bisogno di più spazio
 
 	code->bitfield = (code->bitfield << 1) | (d && 1);
 	code->length++;

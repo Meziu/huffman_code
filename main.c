@@ -6,7 +6,7 @@
 #include "include/alphabet.h"
 
 int main() {
-	char* message = "ciiiaaaoooo";
+	char* message = "buongiorno mondo!";
 
 	Alphabet ab = create_alphabet(message);
 
