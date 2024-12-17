@@ -21,8 +21,7 @@ typedef struct SSymbol {
 } Symbol;
 
 typedef struct {
-	Symbol **symbols; // Array di riferimenti a simboli, che sono allocati
-					  // dinamicamente
+	Symbol *symbols; // Array di simboli
 	unsigned int length;
 	unsigned int message_length;
 } Alphabet;
@@ -31,8 +30,8 @@ Alphabet create_alphabet(char *sample_message);
 void destroy_alphabet(Alphabet *ab);
 
 Symbol *find_symbol(Alphabet *ab, char c);
-unsigned int sort_last_symbol(Symbol **symbols, unsigned int length);
-void bubble_to_last_symbol(Symbol **symbols, unsigned int index, unsigned int length);
+unsigned int sort_last_symbol(Symbol *symbols, unsigned int length);
+void bubble_to_last_symbol(Symbol *symbols, unsigned int index, unsigned int length);
 
 Code new_code();
 void push_code_digit(Code *code, bool d);
@@ -43,9 +42,9 @@ void print_code(Code *code);
 
 float sum_of_probabilities(Alphabet *ab);
 
-void swap_symbol_references(Symbol **a, Symbol **b);
+void swap_symbols(Symbol *a, Symbol *b);
 void quicksort_alphabet(Alphabet *ab);
-int partition_symbols_prob(Symbol **symbols, int start, int end);
-void quicksort_symbols_prob(Symbol **symbols, int start, int end);
+int partition_symbols_prob(Symbol *symbols, int start, int end);
+void quicksort_symbols_prob(Symbol *symbols, int start, int end);
 
 #endif

@@ -8,9 +8,9 @@ Alphabet create_alphabet(char *sample_message) {
 	unsigned int max_alphabet_len =
 		(message_len < MAX_ALPHABET_LENGTH) ? message_len : MAX_ALPHABET_LENGTH;
 
-	Symbol **s_array = (Symbol **)malloc(
+	Symbol *s_array = (Symbol*)malloc(
 		max_alphabet_len *
-		sizeof(Symbol*)); // Worst case scenario, agli allocatori fa più piacere
+		sizeof(Symbol)); // Worst case scenario, agli allocatori fa più piacere
 						 // se chiedi tanto e subito
 
 	assert(s_array != NULL);
@@ -25,11 +25,7 @@ Alphabet create_alphabet(char *sample_message) {
 		Symbol *s = find_symbol(&ab, sample_message[i]);
 
 		if (s == NULL) { // non trovato
-			Symbol* new_sym = malloc(sizeof(Symbol));
-
-			assert(new_sym != NULL);
-
-			*new_sym = (Symbol){
+			Symbol new_sym = (Symbol){
 				sample_message[i],
 				1,
 				new_code(),	 // Default, viene modificato in seguito con altre funzioni.
@@ -42,25 +38,20 @@ Alphabet create_alphabet(char *sample_message) {
 	}
 
 	// Resize dell'array a seconda della lunghezza effettiva
-	ab.symbols = (Symbol**)realloc(ab.symbols, ab.length * sizeof(Symbol*));
+	ab.symbols = (Symbol*)realloc(ab.symbols, ab.length * sizeof(Symbol));
 
 	return ab;
 }
 
 void destroy_alphabet(Alphabet* ab) {
-	for (int i = 0; i < ab->length; i++) {
-		free(ab->symbols[i]);
-	}
-
 	ab->length = 0;
-
 	free(ab->symbols);
 }
 
 Symbol *find_symbol(Alphabet *ab, char c) {
 	for (int i = 0; i < ab->length; i++) {
-		if (c == ab->symbols[i]->s) {
-			return ab->symbols[i];
+		if (c == ab->symbols[i].s) {
+			return &ab->symbols[i];
 		}
 	}
 
@@ -68,12 +59,12 @@ Symbol *find_symbol(Alphabet *ab, char c) {
 }
 
 // Presupponendo una lista ordinata eccetto per l'ultimo simbolo
-unsigned int sort_last_symbol(Symbol** symbols, unsigned int length) {
+unsigned int sort_last_symbol(Symbol* symbols, unsigned int length) {
 	assert(symbols != NULL);
 
 	for (int i = length-2; i >= 0; i--) {
-		if (symbols[i]->prob < symbols[i+1]->prob) {
-			swap_symbol_references(&symbols[i], &symbols[i+1]);
+		if (symbols[i].prob < symbols[i+1].prob) {
+			swap_symbols(&symbols[i], &symbols[i+1]);
 		} else {
 			return i+1;
 		}
@@ -82,11 +73,11 @@ unsigned int sort_last_symbol(Symbol** symbols, unsigned int length) {
 	return 0;
 }
 
-void bubble_to_last_symbol(Symbol **symbols, unsigned int index, unsigned int length) {
+void bubble_to_last_symbol(Symbol *symbols, unsigned int index, unsigned int length) {
 	assert(symbols != NULL);
 
 	for (int i = index; i < length-1; i++) {
-		swap_symbol_references(&symbols[i], &symbols[i+1]);
+		swap_symbols(&symbols[i], &symbols[i+1]);
 	}
 }
 
@@ -106,7 +97,7 @@ void push_code_digit(Code* code, bool d) {
 void print_alphabet(Alphabet *ab) {
 	for (int i = 0; i < ab->length; i++) {
 		printf("--- Simbolo #n %d\n", i + 1);
-		print_symbol(ab, ab->symbols[i]);
+		print_symbol(ab, &ab->symbols[i]);
 		printf("---\n");
 	}
 }
@@ -133,7 +124,7 @@ float sum_of_probabilities(Alphabet *ab) {
 	unsigned int sum = 0;
 
 	for (int i = 0; i < ab->length; i++) {
-		sum += ab->symbols[i]->prob;
+		sum += ab->symbols[i].prob;
 	}
 
 	return (float)sum / (float)ab->message_length;
@@ -147,13 +138,13 @@ void quicksort_alphabet(Alphabet *ab) {
 	quicksort_symbols_prob(ab->symbols, 0, ab->length - 1);
 }
 
-void swap_symbol_references(Symbol **a, Symbol **b) {
-	Symbol* temp = *a;
+void swap_symbols(Symbol *a, Symbol *b) {
+	Symbol temp = *a;
 	*a = *b;
 	*b = temp;
 }
 
-void quicksort_symbols_prob(Symbol **symbols, int start, int end) {
+void quicksort_symbols_prob(Symbol *symbols, int start, int end) {
 	assert(symbols != NULL);
 
 	if (start < end) {
@@ -163,17 +154,17 @@ void quicksort_symbols_prob(Symbol **symbols, int start, int end) {
 	}
 }
 
-int partition_symbols_prob(Symbol **symbols, int start, int end) {
-	float pivot = symbols[end]->prob;
+int partition_symbols_prob(Symbol *symbols, int start, int end) {
+	float pivot = symbols[end].prob;
 	int i = start - 1;
 
 	for (int j = start; j < end; j++) {
-		if (symbols[j]->prob >= pivot) {
+		if (symbols[j].prob >= pivot) {
 			i++;
-			swap_symbol_references(&symbols[i], &symbols[j]);
+			swap_symbols(&symbols[i], &symbols[j]);
 		}
 	}
 
-	swap_symbol_references(&symbols[i + 1], &symbols[end]);
+	swap_symbols(&symbols[i + 1], &symbols[end]);
 	return i + 1;
 }
