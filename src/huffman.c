@@ -9,6 +9,9 @@ void huffman_recursive(Symbol** symbols, unsigned int length);
 void huffman_tree_encode(Symbol* root);
 
 void huffman_code(Alphabet* ab) {
+	// Alfabeto ordinato, alfabeto fortunato
+	quicksort_alphabet(ab);
+
 	Symbol** array_copy = malloc(ab->length * sizeof(Symbol*));
 	memcpy(array_copy, ab->symbols, ab->length*sizeof(Symbol*));
 
@@ -19,14 +22,13 @@ void huffman_code(Alphabet* ab) {
 	free(array_copy);
 }
 
+// Richiede che l'array symbols sia già ordinato (per la probabilità)
 void huffman_recursive(Symbol** symbols, unsigned int length) {
 	if (symbols == NULL) {
 		return;
 	}
 
 	if (length > 1) {
-		quicksort_symbols_prob(symbols, 0, length - 1); // Sorting iniziale per avere le probabilità minori in coda.
-
 		Symbol* second_to_last = symbols[length-2];
 		Symbol* last = symbols[length-1];
 
@@ -41,7 +43,10 @@ void huffman_recursive(Symbol** symbols, unsigned int length) {
 		};
 
 		// Taglio dell'alfabeto (è una copia, non ci interessa sistemarlo alla fine)
-		symbols[length-2] = fusion; // Inserisci fusion al posto dei due nodi figli
+		symbols[length-2] = fusion; // Sostituisci fusion al posto dei due nodi figli
+
+		// Inserisci l'elemento fusion al punto giusto dell'array
+		sort_last_symbol(symbols, length-1);
 
 		// Il risultato del codice dato da questa chiamata è restituito.
 		huffman_recursive(symbols, length-1);
