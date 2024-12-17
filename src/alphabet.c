@@ -8,7 +8,7 @@ Alphabet create_alphabet(char *sample_message) {
 	unsigned int max_alphabet_len =
 		(message_len < MAX_ALPHABET_LENGTH) ? message_len : MAX_ALPHABET_LENGTH;
 
-	Symbol *s_array = (Symbol*)malloc(
+	Symbol *s_array = (Symbol *)malloc(
 		max_alphabet_len *
 		sizeof(Symbol)); // Worst case scenario, agli allocatori fa più piacere
 						 // se chiedi tanto e subito
@@ -26,9 +26,9 @@ Alphabet create_alphabet(char *sample_message) {
 
 		if (s == NULL) { // non trovato
 			Symbol new_sym = (Symbol){
-				sample_message[i],
-				1,
-				new_code(),	 // Default, viene modificato in seguito con altre funzioni.
+				sample_message[i], 1,
+				new_code(), // Default, viene modificato in seguito con altre
+							// funzioni.
 			};
 
 			ab.symbols[ab.length++] = new_sym;
@@ -38,12 +38,12 @@ Alphabet create_alphabet(char *sample_message) {
 	}
 
 	// Resize dell'array a seconda della lunghezza effettiva
-	ab.symbols = (Symbol*)realloc(ab.symbols, ab.length * sizeof(Symbol));
+	ab.symbols = (Symbol *)realloc(ab.symbols, ab.length * sizeof(Symbol));
 
 	return ab;
 }
 
-void destroy_alphabet(Alphabet* ab) {
+void destroy_alphabet(Alphabet *ab) {
 	ab->length = 0;
 	free(ab->symbols);
 }
@@ -59,36 +59,37 @@ Symbol *find_symbol(Alphabet *ab, char c) {
 }
 
 // Presupponendo una lista ordinata eccetto per l'ultimo simbolo
-unsigned int sort_last_symbol(Symbol* symbols, unsigned int length) {
+unsigned int sort_last_symbol(Symbol *symbols, unsigned int length) {
 	assert(symbols != NULL);
 
-	for (int i = length-2; i >= 0; i--) {
-		if (symbols[i].prob < symbols[i+1].prob) {
-			swap_symbols(&symbols[i], &symbols[i+1]);
+	for (int i = length - 2; i >= 0; i--) {
+		if (symbols[i].prob < symbols[i + 1].prob) {
+			swap_symbols(&symbols[i], &symbols[i + 1]);
 		} else {
-			return i+1;
+			return i + 1;
 		}
 	}
 
 	return 0;
 }
 
-void bubble_to_last_symbol(Symbol *symbols, unsigned int index, unsigned int length) {
+void bubble_to_last_symbol(Symbol *symbols, unsigned int index,
+						   unsigned int length) {
 	assert(symbols != NULL);
 
-	for (int i = index; i < length-1; i++) {
-		swap_symbols(&symbols[i], &symbols[i+1]);
+	for (int i = index; i < length - 1; i++) {
+		swap_symbols(&symbols[i], &symbols[i + 1]);
 	}
 }
 
-Code new_code() {
-	return (Code){0, 0};
-}
+Code new_code() { return (Code){0, 0}; }
 
-void push_code_digit(Code* code, bool d) {
+void push_code_digit(Code *code, bool d) {
 	assert(code != NULL);
 
-	assert(code->length <= sizeof(code->bitfield) * 8 - 1); // Se è già al massimo abbiamo bisogno di più spazio
+	assert(code->length <=
+		   sizeof(code->bitfield) * 8 -
+			   1); // Se è già al massimo non si può aggiungere un'altra cifra
 
 	code->bitfield = (code->bitfield << 1) | (d && 1);
 	code->length++;
@@ -102,17 +103,17 @@ void print_alphabet(Alphabet *ab) {
 	}
 }
 
-void print_symbol(Alphabet* ab, Symbol *s) {
+void print_symbol(Alphabet *ab, Symbol *s) {
 	assert(s != NULL);
 
 	printf("Carattere: \"%c\"\n", s->s);
 	printf("Probabilità: %f\n", (float)(s->prob) / (float)(ab->message_length));
-	printf("Codice:");
+	printf("Codice: ");
 	print_code(&s->code);
 	printf("\n");
 }
 
-void print_code(Code* code) {
+void print_code(Code *code) {
 	assert(code != NULL);
 
 	for (int i = code->length - 1; i >= 0; i--) {
@@ -130,7 +131,35 @@ float sum_of_probabilities(Alphabet *ab) {
 	return (float)sum / (float)ab->message_length;
 }
 
-/* LOGICA DEL QUICKSORT, IT JUST WORKS TM */
+char max_code_length(Alphabet *ab) {
+	unsigned char max = 0;
+
+	for (int i = 0; i < ab->length; i++) {
+		unsigned char current = ab->symbols[i].code.length;
+
+		if (max < current) {
+			max = current;
+		}
+	}
+
+	return max;
+}
+
+char min_code_length(Alphabet *ab) {
+	unsigned char min = ~0;
+
+	for (int i = 0; i < ab->length; i++) {
+		unsigned char current = ab->symbols[i].code.length;
+
+		if (min > current) {
+			min = current;
+		}
+	}
+
+	return min;
+}
+
+/* LOGICA DEL QUICKSORT */
 
 void quicksort_alphabet(Alphabet *ab) {
 	assert(ab != NULL);

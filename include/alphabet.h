@@ -8,10 +8,11 @@
 
 #define MAX_ALPHABET_LENGTH 64
 #define MAX_MESSAGE_LENGTH 4096
+#define CODE_BITFIELD_TYPE unsigned long
 
 typedef struct {
-	unsigned long bitfield; // espandibile modificando il tipo
-	char length;			// lunghezza del codice (da destra verso sinistra)
+	CODE_BITFIELD_TYPE bitfield; // espandibile modificando il tipo
+	char length; // lunghezza del codice (da destra verso sinistra)
 } Code;
 
 typedef struct SSymbol {
@@ -31,7 +32,8 @@ void destroy_alphabet(Alphabet *ab);
 
 Symbol *find_symbol(Alphabet *ab, char c);
 unsigned int sort_last_symbol(Symbol *symbols, unsigned int length);
-void bubble_to_last_symbol(Symbol *symbols, unsigned int index, unsigned int length);
+void bubble_to_last_symbol(Symbol *symbols, unsigned int index,
+						   unsigned int length);
 
 Code new_code();
 void push_code_digit(Code *code, bool d);
@@ -41,6 +43,8 @@ void print_symbol(Alphabet *ab, Symbol *s);
 void print_code(Code *code);
 
 float sum_of_probabilities(Alphabet *ab);
+char max_code_length(Alphabet *ab);
+char min_code_length(Alphabet *ab);
 
 void swap_symbols(Symbol *a, Symbol *b);
 void quicksort_alphabet(Alphabet *ab);

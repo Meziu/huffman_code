@@ -3,6 +3,6 @@
 
 #include "alphabet.h"
 
-void huffman_code(Alphabet* ab);
+void huffman_code(Alphabet *ab);
 
 #endif

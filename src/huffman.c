@@ -24,7 +24,8 @@ void huffman_recursive(Symbol *symbols, unsigned int length) {
 		Symbol *second_to_last = &symbols[length - 2];
 		Symbol *last = &symbols[length - 1];
 
-		// L'elemento second_to_last si presta come fusione di se stesso e dell'"ultimo"
+		// L'elemento second_to_last si presta come fusione di se stesso e
+		// dell'"ultimo"
 		second_to_last->prob += last->prob;
 
 		unsigned int spot = sort_last_symbol(symbols, length - 1);
