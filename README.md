@@ -1,6 +1,6 @@
 # Huffman Code
 
-Simple Huffman encoding implementation written in C thought after listening at an interesting lecture.
+Simple Huffman encoding implementation written in C thought after listening to an interesting lecture.
 
 ## License
 
