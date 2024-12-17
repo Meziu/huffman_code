@@ -32,6 +32,7 @@ void destroy_alphabet(Alphabet *ab);
 
 Symbol *find_symbol(Alphabet *ab, char c);
 unsigned int sort_last_symbol(Symbol **symbols, unsigned int length);
+void bubble_to_last_symbol(Symbol **symbols, unsigned int index, unsigned int length);
 
 Code new_code();
 void push_code_digit(Code *code, bool d);

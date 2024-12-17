@@ -82,6 +82,14 @@ unsigned int sort_last_symbol(Symbol** symbols, unsigned int length) {
 	return 0;
 }
 
+void bubble_to_last_symbol(Symbol **symbols, unsigned int index, unsigned int length) {
+	assert(symbols != NULL);
+
+	for (int i = index; i < length-1; i++) {
+		swap_symbol_references(&symbols[i], &symbols[i+1]);
+	}
+}
+
 Code new_code() {
 	return (Code){0, 0};
 }

@@ -13,7 +13,7 @@ int main() {
 	huffman_code(&ab);
 
 	// Per comodità visiva.
-	quicksort_alphabet(&ab);
+	//quicksort_alphabet(&ab);
 
 	print_alphabet(&ab);
 

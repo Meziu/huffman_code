@@ -24,16 +24,18 @@ void huffman_recursive(Symbol **symbols, unsigned int length) {
 		Symbol *second_to_last = symbols[length - 2];
 		Symbol *last = symbols[length - 1];
 
-		// L'elemento second_to_last si presta come fusione di se stesso e dell'
-		// "ultimo"
+		// L'elemento second_to_last si presta come fusione di se stesso e dell'"ultimo"
 		second_to_last->prob += last->prob;
 
 		unsigned int spot = sort_last_symbol(symbols, length - 1);
-		second_to_last = symbols[spot];
 
 		// Il risultato del codice dato da questa chiamata è restituito.
 		huffman_recursive(symbols, length - 1);
 
+		// Riporta allo stato originale l'ordine dell'array
+		bubble_to_last_symbol(symbols, spot, length - 1);
+
+		second_to_last = symbols[length - 2];
 		second_to_last->prob -= last->prob;
 
 		// Propagazione del codice associato
