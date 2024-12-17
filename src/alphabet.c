@@ -76,16 +76,18 @@ Symbol *find_symbol(Alphabet *ab, char c) {
 }
 
 // Presupponendo una lista ordinata eccetto per l'ultimo simbolo
-void sort_last_symbol(Symbol** symbols, unsigned int length) {
+unsigned int sort_last_symbol(Symbol** symbols, unsigned int length) {
 	assert(symbols != NULL);
 
 	for (int i = length-2; i >= 0; i--) {
 		if (symbols[i]->prob < symbols[i+1]->prob) {
 			swap_symbol_references(&symbols[i], &symbols[i+1]);
 		} else {
-			break;
+			return i+1;
 		}
 	}
+
+	return 0;
 }
 
 Code new_code() {

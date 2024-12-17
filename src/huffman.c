@@ -29,8 +29,6 @@ void huffman_recursive(Symbol** symbols, unsigned int length) {
 	}
 
 	if (length > 1) {
-		//quicksort_symbols_prob(symbols, 0, length-1);
-
 		Symbol* second_to_last = symbols[length-2];
 		Symbol* last = symbols[length-1];
 
@@ -47,7 +45,8 @@ void huffman_recursive(Symbol** symbols, unsigned int length) {
 		symbols[length-2] = &fusion; // Sostituiamo fusion al posto dei due nodi figli
 
 		// Inserisci l'elemento fusion al punto giusto dell'array
-		sort_last_symbol(symbols, length-1);
+		unsigned int spot = sort_last_symbol(symbols, length-1);
+		assert(second_to_last == symbols[spot]->right);
 
 		// Il risultato del codice dato da questa chiamata è restituito.
 		huffman_recursive(symbols, length-1);

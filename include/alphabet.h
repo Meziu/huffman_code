@@ -10,7 +10,7 @@
 #define MAX_MESSAGE_LENGTH 1000
 
 typedef struct {
-	char bitfield; // espandibile modificando il tipo
+	unsigned long bitfield; // espandibile modificando il tipo
 	char length; // lunghezza del codice (da destra verso sinistra)
 } Code;
 
@@ -32,7 +32,7 @@ Alphabet create_alphabet(char* sample_message);
 void destroy_alphabet(Alphabet* ab);
 
 Symbol* find_symbol(Alphabet* ab, char c);
-void sort_last_symbol(Symbol** symbols, unsigned int length);
+unsigned int sort_last_symbol(Symbol** symbols, unsigned int length);
 
 Code new_code();
 void push_code_digit(Code* code, bool d);
