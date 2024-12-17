@@ -29,8 +29,9 @@ typedef struct {
 } Alphabet;
 
 Alphabet create_alphabet(char* sample_message);
-Symbol* find_symbol(Alphabet* ab, char c);
 void destroy_alphabet(Alphabet* ab);
+
+Symbol* find_symbol(Alphabet* ab, char c);
 
 Code new_code();
 void push_code_digit(Code* code, bool d);

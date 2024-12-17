@@ -3,6 +3,7 @@
 
 #include "alphabet.h"
 #include "huffman.h"
+#include "include/alphabet.h"
 
 int main() {
 	char* message = "ciiiaaaoooo";
@@ -18,5 +19,6 @@ int main() {
 
 	printf("Somma delle probabilità: %f", sum_of_probabilities(&ab));
 
+	destroy_alphabet(&ab);
 	return 0;
 }

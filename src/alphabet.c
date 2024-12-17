@@ -55,6 +55,16 @@ Alphabet create_alphabet(char *sample_message) {
 	return ab;
 }
 
+void destroy_alphabet(Alphabet* ab) {
+	for (int i = 0; i < ab->length; i++) {
+		free(ab->symbols[i]);
+	}
+
+	ab->length = 0;
+
+	free(ab->symbols);
+}
+
 Symbol *find_symbol(Alphabet *ab, char c) {
 	for (int i = 0; i < ab->length; i++) {
 		if (c == ab->symbols[i]->s) {
