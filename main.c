@@ -10,10 +10,10 @@ int main() {
 
 	Alphabet ab = create_alphabet(message);
 
+	huffman_code(&ab);
+
 	// Per comodità visiva.
 	quicksort_alphabet(&ab);
-
-	huffman_code(&ab);
 
 	print_alphabet(&ab);
 

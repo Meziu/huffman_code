@@ -6,8 +6,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define MAX_ALPHABET_LENGTH 50
-#define MAX_MESSAGE_LENGTH 1000
+#define MAX_ALPHABET_LENGTH 64
+#define MAX_MESSAGE_LENGTH 4096
 
 typedef struct {
 	unsigned long bitfield; // espandibile modificando il tipo
@@ -16,13 +16,14 @@ typedef struct {
 
 typedef struct SSymbol {
 	char s;
-	float prob;
+	unsigned int prob;
 	Code code;
 } Symbol;
 
 typedef struct {
 	Symbol** symbols; // Array di riferimenti a simboli, che sono allocati dinamicamente
 	unsigned int length;
+	unsigned int message_length;
 } Alphabet;
 
 Alphabet create_alphabet(char* sample_message);
@@ -35,7 +36,7 @@ Code new_code();
 void push_code_digit(Code* code, bool d);
 
 void print_alphabet(Alphabet* ab);
-void print_symbol(Symbol* s);
+void print_symbol(Alphabet* ab, Symbol* s);
 void print_code(Code* code);
 
 float sum_of_probabilities(Alphabet* ab);

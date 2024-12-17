@@ -18,6 +18,7 @@ Alphabet create_alphabet(char *sample_message) {
 	Alphabet ab = (Alphabet){
 		s_array,
 		0,
+		message_len,
 	};
 
 	for (int i = 0; i < message_len; i++) {
@@ -30,21 +31,14 @@ Alphabet create_alphabet(char *sample_message) {
 
 			*new_sym = (Symbol){
 				sample_message[i],
-				1.0, // Non mi piace l'utilizzo di float per numeri interi,
-					 // considera il type casting/union
+				1,
 				new_code(),	 // Default, viene modificato in seguito con altre funzioni.
 			};
 
 			ab.symbols[ab.length++] = new_sym;
 		} else { // trovato
-			s->prob +=
-				1.0; // rifarsi al commento sopra riguardo l'uso dei float
+			s->prob += 1;
 		}
-	}
-
-	// Normalizzazione delle probabilità
-	for (int i = 0; i < ab.length; i++) {
-		ab.symbols[i]->prob /= message_len;
 	}
 
 	// Resize dell'array a seconda della lunghezza effettiva
@@ -104,16 +98,16 @@ void push_code_digit(Code* code, bool d) {
 void print_alphabet(Alphabet *ab) {
 	for (int i = 0; i < ab->length; i++) {
 		printf("--- Simbolo #n %d\n", i + 1);
-		print_symbol(ab->symbols[i]);
+		print_symbol(ab, ab->symbols[i]);
 		printf("---\n");
 	}
 }
 
-void print_symbol(Symbol *s) {
+void print_symbol(Alphabet* ab, Symbol *s) {
 	assert(s != NULL);
 
 	printf("Carattere: \"%c\"\n", s->s);
-	printf("Probabilità: %f\n", s->prob);
+	printf("Probabilità: %f\n", (float)(s->prob) / (float)(ab->message_length));
 	printf("Codice:");
 	print_code(&s->code);
 	printf("\n");
@@ -128,24 +122,13 @@ void print_code(Code* code) {
 }
 
 float sum_of_probabilities(Alphabet *ab) {
-	float sum = 0.0;
+	unsigned int sum = 0;
 
 	for (int i = 0; i < ab->length; i++) {
-		sum +=
-			ab->symbols[i]
-				->prob; // C'è chi direbbe che sommare in questo modo barbaro dei
-					   // float accumuli un grosso errore, non sono uno di loro.
+		sum += ab->symbols[i]->prob;
 	}
 
-	return sum;
-}
-
-float node_probability(Symbol* sym) {
-	if (sym == NULL && sym->s != '\0') { // Il NUL character è ufficialmente il simbolo di un nodo "fittizio"
-		return 0.0;
-	}
-
-	return sym->prob;
+	return (float)sum / (float)ab->message_length;
 }
 
 /* LOGICA DEL QUICKSORT, IT JUST WORKS TM */
