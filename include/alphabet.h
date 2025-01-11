@@ -1,7 +1,6 @@
 #ifndef __ALPHABET_H__
 #define __ALPHABET_H__
 
-#include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>

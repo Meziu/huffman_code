@@ -1,6 +1,6 @@
 #include "alphabet.h"
+#include <assert.h>
 #include <stdio.h>
-#include <unistd.h>
 
 Alphabet create_alphabet(char *sample_message) {
 	unsigned int message_len = strnlen(sample_message, MAX_MESSAGE_LENGTH);
