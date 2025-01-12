@@ -28,8 +28,8 @@ void huffman_recursive(Symbol *symbols, unsigned int length) {
 	bubble_to_last_symbol(symbols, pos, length - 1);
 
 	symbols[length - 2].prob -= symbols[length - 1].prob;
-
 	symbols[length - 1].code = symbols[length - 2].code;
+
 	push_code_digit(&symbols[length - 2].code, 1);
 	push_code_digit(&symbols[length - 1].code, 0);
 }
